@@ -19,23 +19,26 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public void createProduct(ProductRequest productRequestBody) {
+    public ProductResponse createProduct(ProductRequest productRequestBody) {
 
         Product product = Product.builder()
-                .productName(productRequestBody.getProductName())
-                .description(productRequestBody.getDescription())
-                .price(productRequestBody.getPrice())
-                .brandName(productRequestBody.getBrandName())
-                .size(productRequestBody.getSize())
-                .colour(productRequestBody.getColour())
+                .productName(productRequestBody.productName())
+                .description(productRequestBody.description())
+                .startingPrice(productRequestBody.startingPrice())
+                .brandName(productRequestBody.brandName())
+                .size(productRequestBody.size())
+                .colour(productRequestBody.colour())
                 .build();
         productRepository.save(product);
-        log.info("Product id {} is saved. ", product.getProductId());
+        log.info("Product with id {} is saved. ", product.getProductId());
+        return  new ProductResponse(product.getProductId(), product.getProductName(), product.getBrandName(), product.getDescription(), product.getStartingPrice(), product.getSize(), product.getColour());
     }
 
     public List<ProductResponse> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return products.stream().map(this::mapToProductResponse).toList();
+        return productRepository.findAll()
+                .stream()
+                .map(product -> new ProductResponse(product.getProductId(), product.getProductName(), product.getBrandName(), product.getDescription(), product.getStartingPrice(), product.getSize(), product.getColour()))
+                .toList();
     }
 
     private ProductResponse mapToProductResponse(Product product) {
@@ -46,7 +49,7 @@ public class ProductService {
                 .brandName(product.getBrandName())
                 .colour(product.getColour())
                 .size(product.getSize())
-                .price(product.getPrice())
+                .startingPrice(product.getStartingPrice())
                 .build();
     }
 }
