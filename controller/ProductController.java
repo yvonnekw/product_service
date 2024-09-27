@@ -19,8 +19,8 @@ public class ProductController {
 
     @PostMapping("/create-product")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createProduct(@RequestBody ProductRequest productRequest) {
-        productService.createProduct(productRequest);
+    public ProductResponse createProduct(@RequestBody ProductRequest productRequest) {
+        return productService.createProduct(productRequest);
     }
 
     @GetMapping("/get-all-products")
